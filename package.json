@@ -1,0 +1,20 @@
+{
+  "name": "ai-code-review-assistant",
+  "version": "1.0.0",
+  "description": "AI-powered Code Review Assistant built with React, Node.js, MongoDB, and Gemini",
+  "private": true,
+  "scripts": {
+    "server": "npm --prefix server run dev",
+    "client": "npm --prefix client run dev"
+  },
+  "keywords": [
+    "code-review",
+    "ai",
+    "gemini",
+    "react",
+    "express",
+    "monaco-editor"
+  ],
+  "author": "",
+  "license": "MIT"
+}
