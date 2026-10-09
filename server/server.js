@@ -1,34 +1,30 @@
 require('dotenv').config();
+
 const http = require('http');
 const app = require('./src/app');
 const { connectDB } = require('./src/config/db');
 
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
+const HOST = '0.0.0.0';
 
-// Initialize Server
-const startServer = async () => {
-  // Connect to Database
-  await connectDB();
+// Start listening immediately so Render can detect the port.
+const server = http.createServer(app);
 
-  const server = http.createServer(app);
+server.listen(PORT, HOST, () => {
+  console.log(`AI Code Review API running on ${HOST}:${PORT}`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`Health check: /api/v1/health`);
+});
 
-  server.listen(PORT, () => {
-    console.log(`===============================================`);
-    console.log(`🚀 AI Code Review API Server running on port ${PORT}`);
-    console.log(`📡 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🩺 Health Check: http://localhost:${PORT}/api/v1/health`);
-    console.log(`===============================================`);
-  });
+// Connect to MongoDB independently of server startup.
+connectDB().catch((error) => {
+  console.error('MongoDB connection failed:', error.message);
+});
 
-  // Handle Unhandled Promise Rejections
-  process.on('unhandledRejection', (err) => {
-    console.error(`❌ [UnhandledRejection]: ${err.message}`);
-  });
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled rejection:', error.message);
+});
 
-  // Handle Uncaught Exceptions
-  process.on('uncaughtException', (err) => {
-    console.error(`❌ [UncaughtException]: ${err.message}`);
-  });
-};
-
-startServer();
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught exception:', error.message);
+});
